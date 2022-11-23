@@ -1,8 +1,6 @@
 package todo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,10 +9,13 @@ import javax.persistence.*;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NonNull
     private String username;
+    @NonNull
     private String password;
 }

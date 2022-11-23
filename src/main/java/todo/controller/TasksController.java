@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import todo.model.Task;
 import todo.service.TasksService;
+import todo.util.UserName;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,18 +20,21 @@ public class TasksController {
 
     @GetMapping("/all_tasks")
     public String allTasks(Model model, HttpSession httpSession) {
+        UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAll());
         return "/all_tasks";
     }
 
     @GetMapping("/completed_tasks")
     public String completedTasks(Model model, HttpSession httpSession) {
+        UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAllCompletedTasks());
         return "/completed_tasks";
     }
 
     @GetMapping("/unexecuted_task")
     public String unexecutedTasks(Model model, HttpSession httpSession) {
+        UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAllUnexecutedTask());
         return "/unexecuted_task";
     }
@@ -38,6 +42,7 @@ public class TasksController {
     @GetMapping("/detail_task/{taskId}")
     public String detailTask(Model model, HttpSession httpSession,
                              @PathVariable("taskId") int id) {
+        UserName.userSessionSetName(model, httpSession);
         model.addAttribute("task", tasksService.findById(id));
         return "/detail_task";
     }
@@ -56,6 +61,7 @@ public class TasksController {
 
     @GetMapping("/formEdit/{taskId}")
     public String formEdit(Model model, HttpSession httpSession, @PathVariable("taskId") int id) {
+        UserName.userSessionSetName(model, httpSession);
         model.addAttribute("task", tasksService.findById(id));
         return "formEdit";
     }

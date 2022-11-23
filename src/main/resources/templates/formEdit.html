@@ -25,11 +25,19 @@
 <div class="container">
 
     <nav class="nav nav-tabs">
-            <a class="nav-item nav-link active" href="@{/all_tasks}">Все задачи</a>
+            <a class="nav-item nav-link active" href="#">Все задачи</a>
             <a class="nav-item nav-link" th:href="@{/completed_tasks}">Выполненные</a>
             <a class="nav-item nav-link" th:href="@{/unexecuted_task}">Невыполненные</a>
+            <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
+            <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
+                <span th:text="${user.username}"></span>
+                <span> | Войти</span>
+            </a>
+                <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/logout}">
+                <span th:text="${user.username}"></span>
+            <span> | Выйти</span>
+            </a>
     </nav>
-
     <div class="row pt-3">
         <div class="card" style="width: 60%">
             <div class="card-header">
