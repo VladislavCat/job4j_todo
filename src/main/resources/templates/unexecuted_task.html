@@ -25,10 +25,9 @@
 <div class="container">
 
 <nav class="nav nav-tabs">
-        <a class="nav-item nav-link" href="@{/all_tacks}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/all_tasks}">Все задачи</a>
         <a class="nav-item nav-link" th:href="@{/completed_tasks}">Выполненные</a>
-        <a class="nav-item nav-link active" th:href="#">Невыполненные</a>
-        <a class="nav-item nav-link" th:href="@{/create_task}">Создание новой задачи</a>
+        <a class="nav-item nav-link active" href="#">Невыполненные</a>
         <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
@@ -76,7 +75,7 @@
         </table>
     </div>
     <div class="row pt-3">
-        <a class="btn btn-primary" th:href="@{/formAddTask}" role="button">Добавить задание</a>
+        <a class="btn btn-primary" th:href="@{/create_task}" role="button">Добавить задание</a>
     </div>
 </div>
 </body>
