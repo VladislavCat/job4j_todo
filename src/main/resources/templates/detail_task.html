@@ -60,7 +60,7 @@
                         <td th:text="${task.created}"></td>
                     </tr>
                     <tr>
-                        <th scope="col">Состояние</th>
+                        <th scope="col">Статус</th>
                         <td class="table-success" th:if="${task.done}">Выполнено</td>
                         <td class="table-warning" th:if="${!task.done}">Невыполнено</td>
                     </tr>
@@ -68,7 +68,7 @@
                 <div>
                     <div class="btn-group-vertical" role="group" aria-label="Basic example">
                         <form th:action="@{|/completeTask/${task.id}|}" method="POST">
-                            <button th:if="${!task.done}" type="submit" class="btn btn-success">Завершить</button>
+                            <button th:if="${!task.done}" type="submit" class="btn btn-success">Выполнил</button>
                         </form>
                         <a th:if="${!task.done}" class="btn btn-info" th:href="@{|/formEdit/${task.id}|}" role="button">Редактировать</a>
                         <form th:action="@{|/deleteTask/${task.id}|}" method="POST">

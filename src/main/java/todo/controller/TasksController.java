@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import todo.service.TasksService;
 
 import javax.servlet.http.HttpSession;
@@ -37,5 +38,17 @@ public class TasksController {
                              @PathVariable("taskId") int id) {
         model.addAttribute("task", tasksService.findById(id));
         return "/detail_task";
+    }
+
+    @PostMapping("/completeTask/{taskId}")
+    public String completedTask(@PathVariable("taskId") int id) {
+        tasksService.executeTask(id);
+        return "redirect:/all_tasks";
+    }
+
+    @PostMapping("/deleteTask/{taskId}")
+    public String deletedTask(@PathVariable("taskId") int id) {
+        tasksService.deleteTask(id);
+        return "redirect:/all_tasks";
     }
 }

@@ -52,7 +52,7 @@
             <tr th:each="task: ${tasks}" th:if="task.done">
                 <td th:text="${task.id}"/>
                 <td>
-                    <a th:href="@{|/detailed/${task.id}|}" th:text="${task.description}"/>
+                    <a th:href="@{|/detail_task/${task.id}|}" th:text="${task.description}"/>
                 </td>
                 <td>
                     <span th:text="${task.user.username}"/>

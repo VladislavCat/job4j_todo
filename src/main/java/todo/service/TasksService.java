@@ -29,4 +29,12 @@ public class TasksService {
         return taskStore.findById(id);
     }
 
+    public void executeTask(int id) {
+        taskStore.executeTask(id);
+    }
+
+    public void deleteTask(int id) {
+        taskStore.deleteTask(id);
+    }
+
 }

@@ -23,7 +23,7 @@ public class TaskStore {
         List<Task> rsl = new ArrayList<>();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            Query query = session.createQuery("from Task");
+            Query query = session.createQuery("from Task order by id");
             for (Object o : query.list()) {
                 rsl.add((Task) o);
             }
@@ -37,7 +37,7 @@ public class TaskStore {
         List<Task> rsl = new ArrayList<>();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            Query query = session.createQuery("from Task as t where t.done = true");
+            Query query = session.createQuery("from Task as t where t.done = true order by id");
             for (Object o : query.list()) {
                 rsl.add((Task) o);
             }
@@ -51,7 +51,7 @@ public class TaskStore {
         List<Task> rsl = new ArrayList<>();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            Query query = session.createQuery("from Task as t where t.done = false");
+            Query query = session.createQuery("from Task as t where t.done = false order by id");
             for (Object o : query.list()) {
                 rsl.add((Task) o);
             }
@@ -71,5 +71,29 @@ public class TaskStore {
             logger.error(e.toString(), e);
         }
         return rsl;
+    }
+
+    public void executeTask(int id) {
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.createQuery("Update Task set done = true where id = :fId ")
+                    .setParameter("fId", id)
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+    }
+
+    public void deleteTask(int id) {
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.createQuery("Delete Task where id = :fId ")
+                    .setParameter("fId", id)
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
     }
 }
