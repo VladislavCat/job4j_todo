@@ -37,4 +37,8 @@ public class TasksService {
         taskStore.deleteTask(id);
     }
 
+    public void updateTask(int id, Task task) {
+        taskStore.updateTask(id, task);
+    }
+
 }

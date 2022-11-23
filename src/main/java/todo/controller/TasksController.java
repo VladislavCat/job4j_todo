@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import todo.model.Task;
 import todo.service.TasksService;
 
 import javax.servlet.http.HttpSession;
@@ -49,6 +51,18 @@ public class TasksController {
     @PostMapping("/deleteTask/{taskId}")
     public String deletedTask(@PathVariable("taskId") int id) {
         tasksService.deleteTask(id);
+        return "redirect:/all_tasks";
+    }
+
+    @GetMapping("/formEdit/{taskId}")
+    public String formEdit(Model model, HttpSession httpSession, @PathVariable("taskId") int id) {
+        model.addAttribute("task", tasksService.findById(id));
+        return "formEdit";
+    }
+
+    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task) {
+        tasksService.updateTask(task.getId(), task);
         return "redirect:/all_tasks";
     }
 }

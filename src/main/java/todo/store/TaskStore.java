@@ -96,4 +96,17 @@ public class TaskStore {
             logger.error(e.toString(), e);
         }
     }
+
+    public void updateTask(int id, Task task) {
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.createQuery("Update Task set description = :fDesc where id = :fId")
+                    .setParameter("fDesc", task.getDescription())
+                    .setParameter("fId", task.getId())
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+    }
 }
