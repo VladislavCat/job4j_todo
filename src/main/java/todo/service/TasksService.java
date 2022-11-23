@@ -6,6 +6,7 @@ import todo.model.Task;
 import todo.store.TaskStore;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -22,6 +23,10 @@ public class TasksService {
 
     public List<Task> findAllUnexecutedTask() {
         return taskStore.findAllUnexecutedTask();
+    }
+
+    public Task findById(int id) {
+        return taskStore.findById(id);
     }
 
 }

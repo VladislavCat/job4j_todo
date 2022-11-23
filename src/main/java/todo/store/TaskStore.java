@@ -11,6 +11,7 @@ import todo.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -54,6 +55,18 @@ public class TaskStore {
             for (Object o : query.list()) {
                 rsl.add((Task) o);
             }
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+        return rsl;
+    }
+
+    public Task findById(int id) {
+        Task rsl = new Task();
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("from Task where id = :fId").setParameter("fId", id);
+            rsl = (Task) query.uniqueResultOptional().get();
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }

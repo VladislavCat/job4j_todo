@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import todo.service.TasksService;
 
 import javax.servlet.http.HttpSession;
@@ -29,5 +30,12 @@ public class TasksController {
     public String unexecutedTasks(Model model, HttpSession httpSession) {
         model.addAttribute("tasks", tasksService.findAllUnexecutedTask());
         return "/unexecuted_task";
+    }
+
+    @GetMapping("/detail_task/{taskId}")
+    public String detailTask(Model model, HttpSession httpSession,
+                             @PathVariable("taskId") int id) {
+        model.addAttribute("task", tasksService.findById(id));
+        return "/detail_task";
     }
 }
