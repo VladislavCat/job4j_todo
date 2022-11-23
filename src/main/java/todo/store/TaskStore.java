@@ -19,6 +19,16 @@ public class TaskStore {
     private final SessionFactory sf;
     private final Logger logger = LoggerFactory.getLogger(TaskStore.class);
 
+    public void add(Task task) {
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.save(task);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+    }
+
     public List<Task> findAll() {
         List<Task> rsl = new ArrayList<>();
         try (Session session = sf.openSession()) {

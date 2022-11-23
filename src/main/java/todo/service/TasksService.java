@@ -13,6 +13,10 @@ import java.util.Optional;
 public class TasksService {
     private final TaskStore taskStore;
 
+    public void add(Task task) {
+        taskStore.add(task);
+    }
+
     public List<Task> findAll() {
         return taskStore.findAll();
     }

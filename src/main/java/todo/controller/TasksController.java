@@ -8,15 +8,34 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import todo.model.Task;
+import todo.model.User;
 import todo.service.TasksService;
 import todo.util.UserName;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Controller
 public class TasksController {
     private final TasksService tasksService;
+
+    @GetMapping("/create_task")
+    public String createTask(Model model, HttpSession httpSession) {
+        UserName.userSessionSetName(model, httpSession);
+        model.addAttribute("task",
+                new Task());
+        return "create_task";
+    }
+
+    @PostMapping("/addTask")
+    public String addTask(@ModelAttribute Task task, HttpSession httpSession) {
+        task.setUser((User) httpSession.getAttribute("user"));
+        task.setCreated(LocalDateTime.now());
+        task.setDone(false);
+        tasksService.add(task);
+        return "redirect:/all_tasks";
+    }
 
     @GetMapping("/all_tasks")
     public String allTasks(Model model, HttpSession httpSession) {
