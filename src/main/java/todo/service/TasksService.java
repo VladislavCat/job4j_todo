@@ -22,27 +22,27 @@ public class TasksService {
     }
 
     public List<Task> findAllCompletedTasks() {
-        return taskStore.findAllCompletedTasks();
+        return taskStore.findAllDoneTask(true);
     }
 
     public List<Task> findAllUnexecutedTask() {
-        return taskStore.findAllUnexecutedTask();
+        return taskStore.findAllDoneTask(false);
     }
 
     public Task findById(int id) {
         return taskStore.findById(id);
     }
 
-    public void executeTask(int id) {
-        taskStore.executeTask(id);
+    public Optional<Integer> executeTask(int id) {
+        return taskStore.executeTask(id);
     }
 
-    public void deleteTask(int id) {
-        taskStore.deleteTask(id);
+    public Optional<Integer> deleteTask(int id) {
+        return taskStore.deleteTask(id);
     }
 
-    public void updateTask(int id, Task task) {
-        taskStore.updateTask(id, task);
+    public Optional<Integer> updateTask(int id, Task task) {
+        return taskStore.updateTask(id, task);
     }
 
 }

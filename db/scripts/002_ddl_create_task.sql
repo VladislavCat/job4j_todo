@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS tasks (
    id SERIAL PRIMARY KEY,
    description TEXT NOT NULL,
-   idUser INT NOT NULL REFERENCES users(id),
+   id_user INT NOT NULL REFERENCES users(id),
    created TIMESTAMP NOT NULL,
    done BOOLEAN NOT NULL
 );

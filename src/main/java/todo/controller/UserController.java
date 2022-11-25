@@ -35,7 +35,7 @@ public class UserController {
         }
         HttpSession session = req.getSession();
         session.setAttribute("user", userDb.get());
-        return "redirect:/all_tasks";
+        return "redirect:/tasks/all";
     }
 
     @GetMapping("/formRegistration")

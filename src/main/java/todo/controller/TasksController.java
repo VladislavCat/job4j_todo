@@ -3,10 +3,7 @@ package todo.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import todo.model.Task;
 import todo.model.User;
 import todo.service.TasksService;
@@ -14,80 +11,100 @@ import todo.util.UserName;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Controller
+@RequestMapping("/tasks")
 public class TasksController {
     private final TasksService tasksService;
 
-    @GetMapping("/create_task")
+    @GetMapping("/create")
     public String createTask(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("task",
                 new Task());
-        return "create_task";
+        return "tasks/create";
     }
 
-    @PostMapping("/addTask")
+    @PostMapping("/add")
     public String addTask(@ModelAttribute Task task, HttpSession httpSession) {
         task.setUser((User) httpSession.getAttribute("user"));
         task.setCreated(LocalDateTime.now());
         task.setDone(false);
         tasksService.add(task);
-        return "redirect:/all_tasks";
+        return "redirect:/tasks/all";
     }
 
-    @GetMapping("/all_tasks")
+    @GetMapping("/all")
     public String allTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAll());
-        return "/all_tasks";
+        return "tasks/all";
     }
 
-    @GetMapping("/completed_tasks")
+    @GetMapping("/completed")
     public String completedTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAllCompletedTasks());
-        return "/completed_tasks";
+        return "tasks/completed";
     }
 
-    @GetMapping("/unexecuted_task")
+    @GetMapping("/unexecuted")
     public String unexecutedTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("tasks", tasksService.findAllUnexecutedTask());
-        return "/unexecuted_task";
+        return "tasks/unexecuted";
     }
 
-    @GetMapping("/detail_task/{taskId}")
+    @GetMapping("/detail/{Id}")
     public String detailTask(Model model, HttpSession httpSession,
-                             @PathVariable("taskId") int id) {
+                             @PathVariable("Id") int id) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("task", tasksService.findById(id));
-        return "/detail_task";
+        return "tasks/detail";
     }
 
-    @PostMapping("/completeTask/{taskId}")
-    public String completedTask(@PathVariable("taskId") int id) {
-        tasksService.executeTask(id);
-        return "redirect:/all_tasks";
+    @PostMapping("/complete/{Id}")
+    public String completedTask(Model model, @PathVariable("Id") int id) {
+        Optional<Integer> i = tasksService.executeTask(id);
+        if (i.isPresent() && i.get() <= 0) {
+            model.addAttribute("message", "Состояние не было изменено!");
+            return "redirect:/tasks/404?fail=true";
+        }
+        return "redirect:tasks/all";
     }
 
-    @PostMapping("/deleteTask/{taskId}")
-    public String deletedTask(@PathVariable("taskId") int id) {
-        tasksService.deleteTask(id);
-        return "redirect:/all_tasks";
+    @PostMapping("/delete/{Id}")
+    public String deletedTask(Model model, @PathVariable("Id") int id) {
+        Optional<Integer> i = tasksService.deleteTask(id);
+        if (i.isPresent() && i.get() <= 0) {
+            model.addAttribute("message", "Состояние не было изменено!");
+            return "redirect:/tasks/404?fail=true";
+        }
+        return "redirect:/tasks/all";
     }
 
-    @GetMapping("/formEdit/{taskId}")
-    public String formEdit(Model model, HttpSession httpSession, @PathVariable("taskId") int id) {
+    @GetMapping("/formEdit/{Id}")
+    public String formEdit(Model model, HttpSession httpSession, @PathVariable("Id") int id) {
         UserName.userSessionSetName(model, httpSession);
         model.addAttribute("task", tasksService.findById(id));
-        return "formEdit";
+        return "tasks/formEdit";
     }
 
-    @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task) {
-        tasksService.updateTask(task.getId(), task);
-        return "redirect:/all_tasks";
+    @PostMapping("/update")
+    public String updateTask(Model model, @ModelAttribute Task task) {
+        Optional<Integer> i = tasksService.updateTask(task.getId(), task);
+        if (i.isPresent() && i.get() <= 0) {
+            model.addAttribute("message", "Состояние не было изменено!");
+            return "redirect:/tasks/404?fail=true";
+        }
+        return "redirect:/tasks/all";
+    }
+
+    @GetMapping("/404")
+    public String errorView(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
+        model.addAttribute("fail", fail != null);
+        return "/tasks/404";
     }
 }
