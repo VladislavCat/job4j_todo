@@ -21,11 +21,10 @@
 <body>
 <div class="container">
 
-    <nav class="nav nav-tabs">
-        <a class="nav-item nav-link active" href="#">Все задачи</a>
-        <a class="nav-item nav-link" th:href="@{/completed_tasks}">Выполненные</a>
-        <a class="nav-item nav-link" th:href="@{/unexecuted_task}">Невыполненные</a>
-        <a class="nav-item nav-link" th:href="@{/create_task}">Создание новой задачи</a>
+<nav class="nav nav-tabs">
+        <a class="nav-item nav-link" th:href="@{/tasks/all}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/unexecuted}">Невыполненные</a>
         <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
@@ -43,7 +42,7 @@
                 Новая задача.
             </div>
             <div class="card-body">
-                <form th:action="@{/addTask}" method="POST">
+                <form th:action="@{/tasks/add}" method="POST">
                     <div class="form-group">
                         <input type="hidden" name="id" value="0"/>
                         <label for="description">Описание задачи</label>

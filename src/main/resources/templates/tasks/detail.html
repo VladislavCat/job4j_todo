@@ -25,10 +25,10 @@
 <div class="container">
 
 <nav class="nav nav-tabs">
-        <a class="nav-item nav-link" href="@{/all_tasks}">Все задачи</a>
-        <a class="nav-item nav-link" th:href="@{/completed_tasks}">Выполненные</a>
-        <a class="nav-item nav-link" th:href="@{/unexecuted_task}">Невыполненные</a>
-        <a class="nav-item nav-link" th:href="@{/create_task}">Создание новой задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/all}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/unexecuted}">Невыполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/create}">Создание новой задачи</a>
         <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
@@ -76,11 +76,11 @@
                 </table>
                 <div>
                     <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                        <form th:action="@{|/completeTask/${task.id}|}" method="POST">
+                        <form th:action="@{|/tasks/complete/${task.id}|}" method="POST">
                             <button th:if="${!task.done}" type="submit" class="btn btn-success">Выполнил</button>
                         </form>
-                        <a th:if="${!task.done}" class="btn btn-info" th:href="@{|/formEdit/${task.id}|}" role="button">Редактировать</a>
-                        <form th:action="@{|/deleteTask/${task.id}|}" method="POST">
+                        <a th:if="${!task.done}" class="btn btn-info" th:href="@{|/tasks/formEdit/${task.id}|}" role="button">Редактировать</a>
+                        <form th:action="@{|/tasks/delete/${task.id}|}" method="POST">
                             <button type="submit" class="btn btn-danger">Удалить</button>
                         </form>
                     </div>

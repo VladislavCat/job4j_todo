@@ -19,15 +19,16 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <title>Список задач</title>
+    <title>TODO список</title>
 </head>
 <body>
 <div class="container">
 
 <nav class="nav nav-tabs">
-        <a class="nav-item nav-link" th:href="@{/all_tasks}">Все задачи</a>
-        <a class="nav-item nav-link" th:href="@{/completed_tasks}">Выполненные</a>
-        <a class="nav-item nav-link active" href="#">Невыполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/all}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/unexecuted}">Невыполненные</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/create}">Создание новой задачи</a>
         <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
@@ -39,44 +40,27 @@
         </a>
     </nav>
     <div class="row pt-3">
-        <h2>
-            Все задачи
-        </h2>
+        <div class="card" style="width: 60%">
+            <div class="card-header">
+                <h3>Редактирование задачи</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/tasks/update}" method="POST" th:object="${task}">
+                    <div class="form-group">
+                        <input type="hidden" name="id" th:field="*{id}"/>
+                        <input type="hidden" name="created" th:field="*{created}"/>
+                        <label for="userName">Описание</label>
+                        <input type="text" class="form-control" name="description"
+                               id="description" th:field="*{description}" placeholder="Введите описание задания">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div class="row pt-3">
-        <table class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Задача</th>
-                <th scope="col">Поставил задачу</th>
-                <th scope="col">Дата и время создания задачи</th>
-                <th scope="col">Статус задачи</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="task: ${tasks}" th:if="task.done">
-                <td th:text="${task.id}"/>
-                <td>
-                    <a th:href="@{|/detail_task/${task.id}|}" th:text="${task.description}"/>
-                </td>
-                <td>
-                    <span th:text="${task.user.username}"/>
-                </td>
-                <td>
-                    <span th:text="${task.created}"/>
-                </td>
-                <td class="table-warning">
-                    Задание не выполнено.
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row pt-3">
-        <a class="btn btn-primary" th:href="@{/create_task}" role="button">Добавить задание</a>
-    </div>
 </div>
 </body>
 </html>

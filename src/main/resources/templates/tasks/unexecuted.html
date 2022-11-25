@@ -24,10 +24,10 @@
 <body>
 <div class="container">
 
-    <nav class="nav nav-tabs">
-        <a class="nav-item nav-link" th:href="@{/all_tasks}">Все задачи</a>
-        <a class="nav-item nav-link active" href="#">Выполненные</a>
-        <a class="nav-item nav-link" th:href="@{/unexecuted_task}">Невыполненные</a>
+<nav class="nav nav-tabs">
+        <a class="nav-item nav-link" th:href="@{/tasks/all}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные</a>
+        <a class="nav-item nav-link" href="#">Невыполненные</a>
         <a class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
@@ -59,7 +59,7 @@
             <tr th:each="task: ${tasks}" th:if="task.done">
                 <td th:text="${task.id}"/>
                 <td>
-                    <a th:href="@{|/detail_task/${task.id}|}" th:text="${task.description}"/>
+                    <a th:href="@{|/tasks/detail/${task.id}|}" th:text="${task.description}"/>
                 </td>
                 <td>
                     <span th:text="${task.user.username}"/>
@@ -67,15 +67,15 @@
                 <td>
                     <span th:text="${task.created}"/>
                 </td>
-                <td class="table-success">
-                    Задание выполнено.
+                <td class="table-warning">
+                    Задание не выполнено.
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="row pt-3">
-        <a class="btn btn-primary" th:href="@{/create_task}" role="button">Добавить задание</a>
+        <a class="btn btn-primary" th:href="@{/tasks/create}" role="button">Добавить задание</a>
     </div>
 </div>
 </body>
