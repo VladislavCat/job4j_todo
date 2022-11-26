@@ -1,15 +1,21 @@
 ## Проект JOB4J_TODO
 ### Сервис для постановки и выполнения задач
 ### Стек технологий:
-- Java
-- Maven
-- Spring boot 
-- Thymeleaf
+- Java 17.0.2
+- Maven 3.8.5
+- Spring boot 2.7.3
+
+- Hibernate 5.6.11 final
+- Liquibase 4.15.0
+- Thymeleaf 
 - Bootstrap
-- Hibernate
-- Liquibase
 
 ### Запуск приложения:
+
+Для запуска проекта потребуется:
+- Java 8 и выше
+- Maven 3.8,
+- PostgresSQL 14
 
 Создаем базу данных командой 
 ```shell

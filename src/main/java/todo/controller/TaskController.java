@@ -16,7 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/tasks")
-public class TasksController {
+public class TaskController {
     private final TasksService tasksService;
 
     @GetMapping("/create")
@@ -61,26 +61,31 @@ public class TasksController {
     public String detailTask(Model model, HttpSession httpSession,
                              @PathVariable("Id") int id) {
         UserName.userSessionSetName(model, httpSession);
-        model.addAttribute("task", tasksService.findById(id));
+        Optional<Task> taskOptional = tasksService.findById(id);
+        if (taskOptional.isEmpty()) {
+            model.addAttribute("message", "Данная задача не найдена");
+            return "redirect:/404?fail=true";
+        }
+        model.addAttribute("task", taskOptional.get());
         return "tasks/detail";
     }
 
     @PostMapping("/complete/{Id}")
     public String completedTask(Model model, @PathVariable("Id") int id) {
-        Optional<Integer> i = tasksService.executeTask(id);
-        if (i.isPresent() && i.get() <= 0) {
+        boolean i = tasksService.executeTask(id);
+        if (!i) {
             model.addAttribute("message", "Состояние не было изменено!");
-            return "redirect:/tasks/404?fail=true";
+            return "redirect:/404?fail=true";
         }
         return "redirect:tasks/all";
     }
 
     @PostMapping("/delete/{Id}")
     public String deletedTask(Model model, @PathVariable("Id") int id) {
-        Optional<Integer> i = tasksService.deleteTask(id);
-        if (i.isPresent() && i.get() <= 0) {
+        boolean i = tasksService.deleteTask(id);
+        if (!i) {
             model.addAttribute("message", "Состояние не было изменено!");
-            return "redirect:/tasks/404?fail=true";
+            return "redirect:/404?fail=true";
         }
         return "redirect:/tasks/all";
     }
@@ -94,10 +99,10 @@ public class TasksController {
 
     @PostMapping("/update")
     public String updateTask(Model model, @ModelAttribute Task task) {
-        Optional<Integer> i = tasksService.updateTask(task.getId(), task);
-        if (i.isPresent() && i.get() <= 0) {
+        boolean i = tasksService.updateTask(task.getId(), task);
+        if (!i) {
             model.addAttribute("message", "Состояние не было изменено!");
-            return "redirect:/tasks/404?fail=true";
+            return "redirect:/404?fail=true";
         }
         return "redirect:/tasks/all";
     }
@@ -105,6 +110,6 @@ public class TasksController {
     @GetMapping("/404")
     public String errorView(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
         model.addAttribute("fail", fail != null);
-        return "/tasks/404";
+        return "/404";
     }
 }
