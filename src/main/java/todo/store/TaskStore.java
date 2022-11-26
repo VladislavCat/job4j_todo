@@ -45,7 +45,7 @@ public class TaskStore {
         List<Task> rsl = new ArrayList<>();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            Query<Task> query = session.createQuery("from Task as t where t.done = " + done + " order by id", Task.class);
+            Query<Task> query = session.createQuery("from Task as t where t.done = :fBool order by id", Task.class).setParameter("fBool", done);
             rsl.addAll(query.list());
         } catch (Exception e) {
             logger.error(e.toString(), e);
@@ -53,58 +53,59 @@ public class TaskStore {
         return rsl;
     }
 
-    public Task findById(int id) {
-        Task rsl = new Task();
+    public Optional<Task> findById(int id) {
+        Optional<Task> rsl = Optional.empty();
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            Query query = session.createQuery("from Task where id = :fId").setParameter("fId", id);
-            rsl = (Task) query.uniqueResultOptional().get();
+            Query<Task> query = session.createQuery("from Task where id = :fId", Task.class)
+                    .setParameter("fId", id);
+            rsl = query.uniqueResultOptional();
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }
         return rsl;
     }
 
-    public Optional<Integer> executeTask(int id) {
-        Optional<Integer> rsl = Optional.empty();
+    public boolean executeTask(int id) {
+        int i = 0;
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            rsl = Optional.of(session.createQuery("Update Task set done = true where id = :fId ")
+            i = session.createQuery("Update Task set done = true where id = :fId ")
                     .setParameter("fId", id)
-                    .executeUpdate());
+                    .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }
-        return rsl;
+        return i != 0;
     }
 
-    public Optional<Integer> deleteTask(int id) {
-        Optional<Integer> rsl = Optional.empty();
+    public boolean deleteTask(int id) {
+        int i = 0;
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            rsl = Optional.of(session.createQuery("Delete Task where id = :fId ")
+            i = session.createQuery("Delete Task where id = :fId ")
                     .setParameter("fId", id)
-                    .executeUpdate());
+                    .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }
-        return rsl;
+        return i != 0;
     }
 
-    public Optional<Integer> updateTask(int id, Task task) {
-        Optional<Integer> rsl = Optional.empty();
+    public boolean updateTask(int id, Task task) {
+        int i = 0;
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            rsl = Optional.of(session.createQuery("Update Task set description = :fDesc where id = :fId")
+            i = session.createQuery("Update Task set description = :fDesc where id = :fId")
                     .setParameter("fDesc", task.getDescription())
                     .setParameter("fId", task.getId())
-                    .executeUpdate());
+                    .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }
-        return rsl;
+        return i != 0;
     }
 }

@@ -29,19 +29,19 @@ public class TasksService {
         return taskStore.findAllDoneTask(false);
     }
 
-    public Task findById(int id) {
+    public Optional<Task> findById(int id) {
         return taskStore.findById(id);
     }
 
-    public Optional<Integer> executeTask(int id) {
+    public boolean executeTask(int id) {
         return taskStore.executeTask(id);
     }
 
-    public Optional<Integer> deleteTask(int id) {
+    public boolean deleteTask(int id) {
         return taskStore.deleteTask(id);
     }
 
-    public Optional<Integer> updateTask(int id, Task task) {
+    public boolean updateTask(int id, Task task) {
         return taskStore.updateTask(id, task);
     }
 
