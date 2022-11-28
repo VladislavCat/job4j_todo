@@ -77,7 +77,7 @@ public class TaskController {
             model.addAttribute("message", "Состояние не было изменено!");
             return "redirect:/404?fail=true";
         }
-        return "redirect:tasks/all";
+        return "redirect:/tasks/all";
     }
 
     @PostMapping("/delete/{Id}")
