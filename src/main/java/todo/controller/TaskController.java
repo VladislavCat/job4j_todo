@@ -72,8 +72,8 @@ public class TaskController {
 
     @PostMapping("/complete/{Id}")
     public String completedTask(Model model, @PathVariable("Id") int id) {
-        boolean i = tasksService.executeTask(id);
-        if (!i) {
+        boolean isCompleted = tasksService.executeTask(id);
+        if (!isCompleted) {
             model.addAttribute("message", "Состояние не было изменено!");
             return "redirect:/404?fail=true";
         }
@@ -82,8 +82,8 @@ public class TaskController {
 
     @PostMapping("/delete/{Id}")
     public String deletedTask(Model model, @PathVariable("Id") int id) {
-        boolean i = tasksService.deleteTask(id);
-        if (!i) {
+        boolean isDeleted = tasksService.deleteTask(id);
+        if (!isDeleted) {
             model.addAttribute("message", "Состояние не было изменено!");
             return "redirect:/404?fail=true";
         }
@@ -99,8 +99,8 @@ public class TaskController {
 
     @PostMapping("/update")
     public String updateTask(Model model, @ModelAttribute Task task) {
-        boolean i = tasksService.updateTask(task.getId(), task);
-        if (!i) {
+        boolean isUpdated = tasksService.updateTask(task.getId(), task);
+        if (!isUpdated) {
             model.addAttribute("message", "Состояние не было изменено!");
             return "redirect:/404?fail=true";
         }
