@@ -52,6 +52,7 @@
                 <th scope="col">Задача</th>
                 <th scope="col">Поставил задачу</th>
                 <th scope="col">Дата и время создания задачи</th>
+                <th scope="col">Срочность</th>
                 <th scope="col">Статус задачи</th>
             </tr>
             </thead>
@@ -66,6 +67,9 @@
                 </td>
                 <td>
                     <span th:text="${task.created}"/>
+                </td>
+                <td>
+                    <span th:text="${task.priority.name}"/>
                 </td>
                 <td class="table-warning">
                     Задание не выполнено.

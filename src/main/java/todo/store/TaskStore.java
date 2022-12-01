@@ -21,15 +21,15 @@ public class TaskStore {
     }
 
     public List<Task> findAll() {
-        return crudRepository.query("from Task", Task.class);
+        return crudRepository.query("from Task t left join fetch t.priority", Task.class);
     }
 
     public List<Task> findAllDoneTask(boolean done) {
-        return crudRepository.query("from Task where done = :fDone", Task.class, Map.of("fDone", done));
+        return crudRepository.query("from Task t left join fetch t.priority where done = :fDone", Task.class, Map.of("fDone", done));
     }
 
     public Optional<Task> findById(int id) {
-        return crudRepository.optional("from Task where id = :fId", Task.class, Map.of("fId", id));
+        return crudRepository.optional("from Task t left join fetch t.priority where id = :fId", Task.class, Map.of("fId", id));
     }
 
     public boolean executeTask(int id) {
