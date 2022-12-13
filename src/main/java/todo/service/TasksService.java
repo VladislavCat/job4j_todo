@@ -7,6 +7,7 @@ import todo.store.TaskStore;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -17,15 +18,15 @@ public class TasksService {
         taskStore.add(task);
     }
 
-    public List<Task> findAll() {
+    public Set<Task> findAll() {
         return taskStore.findAll();
     }
 
-    public List<Task> findAllCompletedTasks() {
+    public Set<Task> findAllCompletedTasks() {
         return taskStore.findAllDoneTask(true);
     }
 
-    public List<Task> findAllUnexecutedTask() {
+    public Set<Task> findAllUnexecutedTask() {
         return taskStore.findAllDoneTask(false);
     }
 

@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import todo.Main;
 import todo.model.Task;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -20,16 +20,19 @@ public class TaskStore {
         crudRepository.run(session -> session.persist(task));
     }
 
-    public List<Task> findAll() {
-        return crudRepository.query("from Task t left join fetch t.priority", Task.class);
+    public Set<Task> findAll() {
+        return new HashSet<>(crudRepository.query("from Task t left join fetch t.categories join fetch t.priority",
+                Task.class));
     }
 
-    public List<Task> findAllDoneTask(boolean done) {
-        return crudRepository.query("from Task t left join fetch t.priority where done = :fDone", Task.class, Map.of("fDone", done));
+    public Set<Task> findAllDoneTask(boolean done) {
+        return new HashSet<>(crudRepository.query("from Task t left join fetch t.priority where done = :fDone",
+                Task.class, Map.of("fDone", done)));
     }
 
     public Optional<Task> findById(int id) {
-        return crudRepository.optional("from Task t left join fetch t.priority where id = :fId", Task.class, Map.of("fId", id));
+        return crudRepository.optional("from Task t left join fetch t.priority where id = :fId",
+                Task.class, Map.of("fId", id));
     }
 
     public boolean executeTask(int id) {

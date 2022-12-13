@@ -4,13 +4,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import todo.model.Category;
 import todo.model.Task;
 import todo.model.User;
+import todo.service.CategoryService;
+import todo.service.PriorityService;
 import todo.service.TasksService;
 import todo.util.UserName;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -18,17 +24,30 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TasksService tasksService;
+    private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
     @GetMapping("/create")
     public String createTask(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
+        model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("task",
                 new Task());
         return "tasks/create";
     }
 
     @PostMapping("/add")
-    public String addTask(@ModelAttribute Task task, HttpSession httpSession) {
+    public String addTask(HttpSession httpSession, @RequestParam("categoryId") List<Integer> categoryId,
+                          @ModelAttribute Task task, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        List<Category> categories = new ArrayList<>();
+        for (int i : categoryId) {
+            categories.add(categoryService.findById(i).orElseThrow(() -> {
+                return new NoSuchElementException("Категория не найдена " + i);
+            }));
+        }
+        task.setCategories(categories);
         task.setUser((User) httpSession.getAttribute("user"));
         task.setCreated(LocalDateTime.now());
         task.setDone(false);
