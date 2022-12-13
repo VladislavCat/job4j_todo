@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS category(
     id SERIAL PRIMARY KEY,
-    name TEXT unique NOT NULL
+    name TEXT NOT NULL
 );
