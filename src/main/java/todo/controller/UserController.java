@@ -3,12 +3,11 @@ package todo.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import todo.model.User;
 import todo.service.UserService;
+import todo.util.TimeZoneCheck;
+import todo.util.UserName;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -40,7 +39,7 @@ public class UserController {
 
     @GetMapping("/formRegistration")
     public String createUser(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
-        model.addAttribute("user", new User("username", "password"));
+        model.addAttribute("user", new User("username", "password", "UTC"));
         model.addAttribute("fail", fail != null);
         return "formRegistration";
     }
@@ -58,6 +57,36 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/session";
+        return "redirect:/login";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, HttpSession session) {
+        UserName.userSessionSetName(model, session);
+        return "profile";
+    }
+
+    @GetMapping("/updateProfile/{userId}")
+    public String updateProfile(Model model, HttpSession httpSession, @PathVariable("userId") int id,
+                                @RequestParam(name = "fail", required = false) Boolean fail) {
+        UserName.userSessionSetName(model, httpSession);
+        model.addAttribute("userUpdate", userService.findById(id));
+        model.addAttribute("fail", fail != null);
+        return "updateProfile";
+    }
+
+    @PostMapping("/update")
+    public String update(Model model, @ModelAttribute User user, HttpSession session) {
+        if (!TimeZoneCheck.check(user.getTimeZone())) {
+            return "redirect:/updateProfile/" + user.getId() + "?fail=true";
+        }
+        boolean isUpdated = userService.update(user.getId(), user);
+        if (!isUpdated) {
+            model.addAttribute("message", "Состояние не было изменено! "
+                    + " Такого профиля не существует или такой временно пояс некорректен");
+            return "redirect:/404?fail=true";
+        }
+        session.setAttribute("user", user);
+        return "redirect:/profile";
     }
 }

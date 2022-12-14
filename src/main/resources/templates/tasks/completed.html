@@ -29,6 +29,7 @@
         <a class="nav-item nav-link active" href="#">Выполненные</a>
         <a class="nav-item nav-link" th:href="@{/tasks/unexecuted}">Невыполненные</a>
         <a class="nav-item nav-link" th:href="@{/tasks/formRegistration}">Регистрация</a>
+        <a class="nav-item nav-link" th:href="@{/profile}">Ваш профиль</a>
         <a class="nav-item nav-link" th:if="${user.username == 'Гость'}" th:href="@{/loginPage}">
         <span th:text="${user.username}"></span>
             <span> | Войти</span>

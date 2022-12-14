@@ -3,6 +3,7 @@ package todo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.TimeZone;
 
 @Data
 @Entity
@@ -18,4 +19,7 @@ public class User {
     private String username;
     @NonNull
     private String password;
+    @NonNull
+    @Column(name = "user_zone")
+    private String timeZone;
 }

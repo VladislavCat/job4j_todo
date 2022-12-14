@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TaskStore {
     private final CrudRepository crudRepository;
-    private final Logger logger = LoggerFactory.getLogger(TaskStore.class);
 
     public void add(Task task) {
         crudRepository.run(session -> session.persist(task));
@@ -26,12 +25,12 @@ public class TaskStore {
     }
 
     public Set<Task> findAllDoneTask(boolean done) {
-        return new HashSet<>(crudRepository.query("from Task t left join fetch t.priority where done = :fDone",
+        return new HashSet<>(crudRepository.query("from Task t left join fetch t.priority join fetch t.categories where done = :fDone",
                 Task.class, Map.of("fDone", done)));
     }
 
     public Optional<Task> findById(int id) {
-        return crudRepository.optional("from Task t left join fetch t.priority where id = :fId",
+        return crudRepository.optional("from Task t left join fetch t.priority where t.id = :fId",
                 Task.class, Map.of("fId", id));
     }
 

@@ -14,10 +14,8 @@ import todo.util.UserName;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 
 @AllArgsConstructor
 @Controller
@@ -26,6 +24,7 @@ public class TaskController {
     private final TasksService tasksService;
     private final PriorityService priorityService;
     private final CategoryService categoryService;
+    private final ZoneId defaultZoneId = TimeZone.getDefault().toZoneId();
 
     @GetMapping("/create")
     public String createTask(Model model, HttpSession httpSession) {
@@ -51,21 +50,27 @@ public class TaskController {
     @GetMapping("/all")
     public String allTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
-        model.addAttribute("tasks", tasksService.findAll());
+        String timeZone = ((User) model.getAttribute("user")).getTimeZone();
+        model.addAttribute("tasks", tasksService.findAll(timeZone == null
+                ? defaultZoneId : ZoneId.of(timeZone)));
         return "tasks/all";
     }
 
     @GetMapping("/completed")
     public String completedTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
-        model.addAttribute("tasks", tasksService.findAllCompletedTasks());
+        String timeZone = ((User) model.getAttribute("user")).getTimeZone();
+        model.addAttribute("tasks", tasksService.findAllCompletedTasks(timeZone == null
+                ? defaultZoneId : ZoneId.of(timeZone)));
         return "tasks/completed";
     }
 
     @GetMapping("/unexecuted")
     public String unexecutedTasks(Model model, HttpSession httpSession) {
         UserName.userSessionSetName(model, httpSession);
-        model.addAttribute("tasks", tasksService.findAllUnexecutedTask());
+        String timeZone = ((User) model.getAttribute("user")).getTimeZone();
+        model.addAttribute("tasks", tasksService.findAllUnexecutedTask(timeZone == null
+                ? defaultZoneId : ZoneId.of(timeZone)));
         return "tasks/unexecuted";
     }
 
