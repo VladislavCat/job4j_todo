@@ -41,17 +41,10 @@ public class TaskController {
     public String addTask(HttpSession httpSession, @RequestParam("categoryId") List<Integer> categoryId,
                           @ModelAttribute Task task, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        List<Category> categories = new ArrayList<>();
-        for (int i : categoryId) {
-            categories.add(categoryService.findById(i).orElseThrow(() -> {
-                return new NoSuchElementException("Категория не найдена " + i);
-            }));
-        }
-        task.setCategories(categories);
         task.setUser((User) httpSession.getAttribute("user"));
         task.setCreated(LocalDateTime.now());
         task.setDone(false);
-        tasksService.add(task);
+        tasksService.add(task, categoryId, categoryService);
         return "redirect:/tasks/all";
     }
 

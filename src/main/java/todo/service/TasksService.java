@@ -2,19 +2,26 @@ package todo.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import todo.model.Category;
 import todo.model.Task;
 import todo.store.TaskStore;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class TasksService {
     private final TaskStore taskStore;
 
-    public void add(Task task) {
+    public void add(Task task, List<Integer> categoryId, CategoryService categoryService) {
+        List<Category> categories = new ArrayList<>();
+        for (int i : categoryId) {
+            categories.add(categoryService.findById(i).orElseThrow(()
+                    -> new NoSuchElementException("Категория не найдена " + i)));
+        }
+        task.setCategories(categories);
         taskStore.add(task);
     }
 
@@ -45,5 +52,4 @@ public class TasksService {
     public boolean updateTask(int id, Task task) {
         return taskStore.updateTask(id, task);
     }
-
 }

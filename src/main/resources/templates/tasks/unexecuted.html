@@ -71,6 +71,11 @@
                 <td>
                     <span th:text="${task.priority.name}"/>
                 </td>
+                <td>
+                    <div th:each="category : ${task.categories}">
+                        <span th:text="${category.name}"/>
+                    </div>
+                </td>
                 <td class="table-warning">
                     Задание не выполнено.
                 </td>
