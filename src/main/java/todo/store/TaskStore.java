@@ -19,14 +19,14 @@ public class TaskStore {
         crudRepository.run(session -> session.persist(task));
     }
 
-    public Set<Task> findAll() {
-        return new HashSet<>(crudRepository.query("from Task t left join fetch t.categories join fetch t.priority",
-                Task.class));
+    public List<Task> findAll() {
+        return crudRepository.query("select distinct t from Task t left join fetch t.categories join fetch t.priority",
+                Task.class);
     }
 
-    public Set<Task> findAllDoneTask(boolean done) {
-        return new HashSet<>(crudRepository.query("from Task t left join fetch t.priority join fetch t.categories where done = :fDone",
-                Task.class, Map.of("fDone", done)));
+    public List<Task> findAllDoneTask(boolean done) {
+        return crudRepository.query("select distinct t from Task t left join fetch t.priority join fetch t.categories where done = :fDone",
+                Task.class, Map.of("fDone", done));
     }
 
     public Optional<Task> findById(int id) {

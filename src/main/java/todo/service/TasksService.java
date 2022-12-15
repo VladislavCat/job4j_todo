@@ -25,15 +25,15 @@ public class TasksService {
         taskStore.add(task);
     }
 
-    public Set<Task> findAll(ZoneId timeZone) {
+    public List<Task> findAll(ZoneId timeZone) {
         return updateTimeInTask(timeZone, taskStore.findAll());
     }
 
-    public Set<Task> findAllCompletedTasks(ZoneId timeZone) {
+    public List<Task> findAllCompletedTasks(ZoneId timeZone) {
         return updateTimeInTask(timeZone, taskStore.findAllDoneTask(true));
     }
 
-    public Set<Task> findAllUnexecutedTask(ZoneId timeZone) {
+    public List<Task> findAllUnexecutedTask(ZoneId timeZone) {
         return updateTimeInTask(timeZone, taskStore.findAllDoneTask(false));
     }
 
@@ -53,7 +53,7 @@ public class TasksService {
         return taskStore.updateTask(id, task);
     }
 
-    private Set<Task> updateTimeInTask(ZoneId timeZone, Set<Task> taskSet) {
+    private List<Task> updateTimeInTask(ZoneId timeZone, List<Task> taskSet) {
         taskSet.forEach(task -> task.setCreated(task.getCreated().atZone(TimeZone.getDefault().toZoneId())
                 .withZoneSameInstant(timeZone).toLocalDateTime()));
         return taskSet;
